@@ -1,0 +1,1 @@
+export interface ITag {id: number; tag: string; status: Boolean; created_at: string};
