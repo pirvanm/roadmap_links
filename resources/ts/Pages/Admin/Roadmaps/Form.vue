@@ -34,7 +34,7 @@ const form= useForm({
 })
 
 const submit = () => {
-    let url = props.roadmap ? route('roadmaps.update', {roadmap: props.roadmap.id}) : router('roadmaps.store');
+    let url = props.roadmap ? route('roadmaps.update', {roadmap: props.roadmap.id}) : route('roadmaps.store');
     let method = props.roadmap ? 'patch' : 'post';
 
     form[method](url, {
