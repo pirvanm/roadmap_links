@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
          $roadmap = Roadmap::factory()->create([
              'name' => 'PHP101',
+             'description' => 'Learning about PHP from the very basic to the very advanced.',
              'status' => 1,
              'tag_id' => $tag->id,
          ]);
@@ -43,18 +44,21 @@ class DatabaseSeeder extends Seeder
 
         $roadMapNode = Node::factory()->create([
             'name' => 'Variables',
+            'description' => 'Variables are very important and you need to know them',
             'status' => 1,
             'parent_id' => $roadmap->id,
         ]);
 
         $roadMapNode = Node::factory()->create([
             'name' => 'Functions',
+            'description' => 'Functions are like water, they are the flow',
             'status' => 1,
             'parent_id' => $roadmap->id,
         ]);
 
         $roadMapNode = Node::factory()->create([
             'name' => 'Objects',
+            'description' => 'Objects are like real life objects',
             'status' => 1,
             'parent_id' => $roadmap->id,
         ]);
