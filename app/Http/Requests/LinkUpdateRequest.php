@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LinkRequest extends FormRequest
+class LinkUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,10 @@ class LinkRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|unique:links',
+            'id' => 'required|exists:links,id',
+            'title' => 'required|string|unique:links,title,' . $this->request->get('id'),
             'short_description' => 'required|string',
-            'link' => 'required|string|url|unique:links',
+            'link' => 'required|string|url|unique:links,link,' . $this->request->get('id'),
             'type' => 'required|string',
             'difficulty' => 'required|string',
             'tags' => 'required',

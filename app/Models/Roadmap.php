@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Node;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Roadmap extends Model
 {
@@ -22,11 +23,16 @@ class Roadmap extends Model
 
     public function nodes()
     {
-        return $this->hasMany(RoadmapNode::class, 'parent_id', 'id');
+        return $this->hasMany(Node::class, 'parent_id', 'id');
     }
 
     public function mainNode()
     {
-        return $this->hasOne(RoadmapNode::class, 'roadmap_id', 'id');
+        return $this->hasOne(Node::class, 'roadmap_id', 'id');
+    }
+
+    public function scopeActive($q)
+    {
+        return $q->where('status', 1);
     }
 }

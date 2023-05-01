@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoadmapNodeStoreRequest extends FormRequest
+class RoadmapUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,11 @@ class RoadmapNodeStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent.id' => 'required|exists:roadmap_nodes,id',
-            'name' => 'required|string',
-            'status' => 'nullable|boolean',
+            'id' => 'required|exists:roadmaps,id',
+            'name' => 'required|unique:roadmaps,name,' . $this->request->get('id'),
+            'tag.id' => 'required',
+            'description' => 'nullable|string',
+            'status' => 'nullable|boolean'
         ];
     }
 }

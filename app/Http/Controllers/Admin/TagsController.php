@@ -27,6 +27,6 @@ class TagsController extends Controller
     {
         $tag = Tag::create($request->validated());
 
-        return redirect()->route('tags.create')->with('success','The tag has been saved successfully.');
+        return redirect()->route('tags.index')->with('success','The tag has been saved successfully.');
     }
 }

@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Node;
 use App\Models\Roadmap;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
-class RoadmapNode extends Model
+class Node extends Model
 {
     use HasFactory, HasRecursiveRelationships;
 
     protected $guarded = ['id'];
+
+    protected $with = ['nodes'];
 
     protected $casts = [
         'created_at' => 'date:Y-m-d'
@@ -24,11 +27,16 @@ class RoadmapNode extends Model
 
     public function parent()
     {
-        return $this->belongsTo(RoadmapNode::class, 'parent_id');
+        return $this->belongsTo(Node::class, 'parent_id');
     }
 
     public function nodes()
     {
-        return $this->hasMany(RoadmapNode::class, 'parent_id', 'id');
+        return $this->hasMany(Node::class, 'parent_id', 'id');
+    }
+
+    public function links()
+    {
+        return $this->belongsToMany(Link::class, 'link_node');
     }
 }

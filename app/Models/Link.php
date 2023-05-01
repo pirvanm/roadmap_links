@@ -18,11 +18,20 @@ class Link extends Model
      */
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'created_at' => 'date:Y-m-d',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tag>
      */
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'link_tag');
+    }
+
+    public function nodes()
+    {
+        return $this->belongsToMany(Node::class, 'link_node');
     }
 }

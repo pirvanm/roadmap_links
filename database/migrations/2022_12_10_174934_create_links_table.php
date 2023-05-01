@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('link'); // this has to be unique
             $table->enum('type', ['article', 'video', 'post', 'tool']);
             $table->enum('difficulty', ['easy', 'medium', 'advanced']);
-            $table->enum('status', [0, 1]);
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

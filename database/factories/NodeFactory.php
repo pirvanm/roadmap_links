@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RoadmapNode>
  */
-class RoadmapNodeFactory extends Factory
+class NodeFactory extends Factory
 {
     /**
      * Define the model's default state.

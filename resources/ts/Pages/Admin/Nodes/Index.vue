@@ -13,7 +13,7 @@ const props = defineProps({
         type: [] as PropType<IRoadmapNode[]>,
         default: [],
     },
-    node: {} as PropType<IRoadmapNode>
+    parentNode: {} as PropType<IRoadmapNode>
 })
 
 </script>
@@ -22,21 +22,22 @@ const props = defineProps({
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-700 leading-tight">
-                RoadMaps Nodes - {{ node.name }}
+                RoadMaps Nodes - {{ parentNode.name }}
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex justify-end mb-4">
-                    <PrimaryButton @click="router.visit(route('roadmaps.nodes.create', {node: node.id}))">Create</PrimaryButton>
+                    <PrimaryButton @click="router.visit(route('roadmaps.nodes.create', {node: parentNode.id}))">Create</PrimaryButton>
                 </div>
                 <div class="bg-white overflow-hidden shadow sm:rounded-lg">
-                    <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+                    <table v-if="nodes.length" class="w-full border-collapse bg-white text-left text-sm text-gray-500">
                         <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900">ID</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Name</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Links</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Created At</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center"></th>
                         </tr>
@@ -47,6 +48,7 @@ const props = defineProps({
                                     <div class="font-medium text-gray-700">{{ nodeItem.id }}</div>
                                 </th>
                                 <td class="px-6 py-4 text-center">{{ nodeItem.name }}</td>
+                                <td class="px-6 py-4 text-center">{{ nodeItem.links_count }}</td>
                                 <td class="px-6 py-4 text-center">
                                     {{ nodeItem.created_at }}
                                 </td>
@@ -72,7 +74,7 @@ const props = defineProps({
                                             />
                                         </svg>
                                     </a>
-                                    <a href="#">
+                                    <Link :href="route('roadmaps.nodes.edit', {node: parentNode.id, childNode: nodeItem.id})">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -88,12 +90,15 @@ const props = defineProps({
                                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                                             />
                                         </svg>
-                                    </a>
+                                    </Link>
                                 </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div v-else class="p-3">
+                        <p>There are no nodes, please create one.</p>
+                    </div>
                 </div>
             </div>
         </div>

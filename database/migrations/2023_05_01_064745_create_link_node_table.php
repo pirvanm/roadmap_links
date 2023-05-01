@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roadmap_nodes', function (Blueprint $table) {
+        Schema::create('link_node', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('roadmap_id')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->string('name');
-            $table->boolean('status')->default(0);
+            $table->unsignedBigInteger('link_id');
+            $table->unsignedBigInteger('node_id');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roadmap_nodes');
+        Schema::dropIfExists('link_node');
     }
 };

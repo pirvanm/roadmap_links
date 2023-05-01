@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\RoadmapNodesController;
-use App\Http\Controllers\Admin\RoadmapsController;
-use App\Http\Controllers\Admin\TagsController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\RoadmapController;
+use App\Http\Controllers\Admin\TagsController;
+use App\Http\Controllers\Admin\LinksController;
+use App\Http\Controllers\Admin\NodesController;
+use App\Http\Controllers\Admin\RoadmapsController as AdminRoadmapsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,23 +27,30 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-])->group(function () {
+])->prefix('/admin')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
     Route::prefix('roadmaps')->group(function () {
-        Route::get('/', [RoadmapsController::class, 'index'])->name('roadmaps.index');
-        Route::get('/create', [RoadmapsController::class, 'create'])->name('roadmaps.create');
-        Route::post('/', [RoadmapsController::class, 'store'])->name('roadmaps.store');
+        Route::get('/', [AdminRoadmapsController::class, 'index'])->name('roadmaps.index');
+        Route::get('/create', [AdminRoadmapsController::class, 'create'])->name('roadmaps.create');
+        Route::post('/', [AdminRoadmapsController::class, 'store'])->name('roadmaps.store');
+        Route::get('/{roadmap}/edit', [AdminRoadmapsController::class, 'edit'])->name('roadmaps.edit');
+        Route::patch('/{roadmap}', [AdminRoadmapsController::class, 'update'])->name('roadmaps.update');
 
-
-
-        Route::get('/nodes/{node}', [RoadmapNodesController::class, 'index'])->name('roadmaps.nodes.index');
-        Route::get('/nodes/create/{node}', [RoadmapNodesController::class, 'create'])->name('roadmaps.nodes.create');
-        Route::post('/nodes', [RoadmapNodesController::class, 'store'])->name('roadmaps.nodes.store');
+        Route::get('/nodes/{node}', [NodesController::class, 'index'])->name('roadmaps.nodes.index');
+        Route::get('/nodes/{node}/create', [NodesController::class, 'create'])->name('roadmaps.nodes.create');
+        Route::post('/nodes', [NodesController::class, 'store'])->name('roadmaps.nodes.store');
+        Route::get('/nodes/{node}/{childNode}/edit', [NodesController::class, 'edit'])->name('roadmaps.nodes.edit');
+        Route::patch('/nodes/{node}', [NodesController::class, 'update'])->name('roadmaps.nodes.update');
+        Route::post('/nodes/{node}/link', [NodesController::class, 'storeLink'])->name('roadmaps.nodes.store-link');
 
     });
+
+    Route::get('/links', [LinksController::class, 'index'])->name('links.index');
+    Route::post('/links', [LinksController::class, 'store'])->name('links.store');
+    Route::patch('/links/{link}', [LinksController::class, 'update'])->name('links.update');
 
 
     Route::get('/tags', [TagsController::class, 'index'])->name('tags.index');
@@ -49,3 +58,5 @@ Route::middleware([
     Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
 
 });
+
+Route::get('/roadmaps/{roadmap}', [RoadmapController::class, 'show'])->name('roadmaps.show');

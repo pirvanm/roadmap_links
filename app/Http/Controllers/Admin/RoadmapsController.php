@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Tag;
 use Inertia\Inertia;
+use App\Models\Roadmap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoadmapStoreRequest;
-use App\Models\Roadmap;
+use App\Http\Requests\RoadmapUpdateRequest;
 
 class RoadmapsController extends Controller
 {
     public function index()
     {
-        $roadmaps = Roadmap::with('tag')->with('mainNode')->get();
-
+        $roadmaps = Roadmap::with('tag')->with(['mainNode' => function ($q) {
+            $q->withCount('nodes');
+        }])->get();
 
         return Inertia::render('Admin/Roadmaps/Index')->with(['roadmaps' => $roadmaps]);
     }
@@ -37,9 +39,37 @@ class RoadmapsController extends Controller
 
         $roadmap->mainNode()->create([
             'name' => $request->validated('name'),
+            'status' => 1,
         ]);
 
         return redirect()->route('roadmaps.index')->with('success','The roadmap has been saved successfully.');
 
+    }
+
+    
+    public function edit(Roadmap $roadmap)
+    {
+        $tags = Tag::active()->get();
+
+        $roadmap->load('tag');
+
+        return Inertia::render('Admin/Roadmaps/Create')->with([
+            'tags' => $tags,
+            'roadmap' => $roadmap,
+        ]);
+    }
+
+    public function update(RoadmapUpdateRequest $request, Roadmap $roadmap)
+    {
+        $validated = $request->validated();
+
+        $roadmap->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'status' => $validated['status'],
+            'tag_id' => $validated['tag']['id'],
+        ]);
+
+        return redirect()->route('roadmaps.index')->with('success','The roadmap has been updated successfully.');
     }
 }

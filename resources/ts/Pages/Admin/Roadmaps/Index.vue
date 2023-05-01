@@ -36,6 +36,7 @@ const props = defineProps({
                         <tr>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900">ID</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Name</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Nodes</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Tag</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">State</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Created At</th>
@@ -48,6 +49,7 @@ const props = defineProps({
                                     <div class="font-medium text-gray-700">{{ roadmap.id }}</div>
                                 </th>
                                 <td class="px-6 py-4 text-center">{{ roadmap.name }}</td>
+                                <td class="px-6 py-4 text-center">{{ roadmap.main_node.nodes_count }}</td>
                                 <td class="px-6 py-4 text-center">{{ roadmap.tag.tag }}</td>
                                 <td class="px-6 py-4 flex justify-center">
                                     <span v-if="roadmap.status" class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
@@ -80,7 +82,7 @@ const props = defineProps({
                                             />
                                         </svg>
                                     </a>
-                                    <a href="#">
+                                    <Link :href="route('roadmaps.edit', {roadmap: roadmap.id})">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -96,7 +98,7 @@ const props = defineProps({
                                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                                             />
                                         </svg>
-                                    </a>
+                                    </Link>
                                 </div>
                                 </td>
                             </tr>

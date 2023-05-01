@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Tag;
+use App\Models\Node;
 use App\Models\Roadmap;
 use App\Models\RoadmapNode;
-use App\Models\Tag;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -40,19 +41,19 @@ class DatabaseSeeder extends Seeder
             'name' => $roadmap->name,
         ]);
 
-        $roadMapNode = RoadmapNode::factory()->create([
+        $roadMapNode = Node::factory()->create([
             'name' => 'Variables',
             'status' => 1,
             'parent_id' => $roadmap->id,
         ]);
 
-        $roadMapNode = RoadmapNode::factory()->create([
+        $roadMapNode = Node::factory()->create([
             'name' => 'Functions',
             'status' => 1,
             'parent_id' => $roadmap->id,
         ]);
 
-        $roadMapNode = RoadmapNode::factory()->create([
+        $roadMapNode = Node::factory()->create([
             'name' => 'Objects',
             'status' => 1,
             'parent_id' => $roadmap->id,

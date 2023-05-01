@@ -4,6 +4,8 @@ import vue from "@vitejs/plugin-vue";
 import { ConfigEnv, defineConfig } from "vite";
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+import svgLoader from 'vite-svg-loader'
+
 import path from "path";
 
 const pathResources = path.resolve(__dirname, "resources");
@@ -15,6 +17,7 @@ export default defineConfig(({command}: ConfigEnv) => {
                 {find: '@', replacement: path.resolve(__dirname, 'resources/ts/')},
                 {find: '~/views', replacement: path.resolve(__dirname, 'resources/ts')},
                 {find: '~/shared', replacement: path.resolve(__dirname, 'resources/shared')},
+                {find: '~/assets', replacement: path.resolve(__dirname, 'resources/assets')},
             ],
         },
         base: command === 'build' ? '/dist/' : '',
@@ -39,7 +42,8 @@ export default defineConfig(({command}: ConfigEnv) => {
                     },
                 },
             }),
-            tsconfigPaths()
+            tsconfigPaths(),
+            svgLoader()
         ],
         server: {
             hmr: {
