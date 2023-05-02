@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roadmaps', function (Blueprint $table) {
+        Schema::create('roadmap_tag', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->boolean('status')->default(0);
-            $table->softDeletes();
+            $table->unsignedBigInteger('roadmap_id');
+            $table->unsignedBigInteger('tag_id');
             $table->timestamps();
+
+            $table->foreign('roadmap_id')->references('id')->on('roadmaps')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roadmaps');
+        Schema::dropIfExists('roadmap_tag');
     }
 };

@@ -139,10 +139,6 @@ router.on('success', (event) => {
                                             <DropdownLink :href="route('tags.index')">
                                                 List Tags
                                             </DropdownLink>
-
-                                            <DropdownLink :href="route('tags.create')">
-                                                Create New Tag
-                                            </DropdownLink>
                                         </template>
                                 </DropdownNav>
                             </div>

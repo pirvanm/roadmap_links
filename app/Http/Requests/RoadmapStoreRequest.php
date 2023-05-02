@@ -23,7 +23,8 @@ class RoadmapStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:roadmaps,name',
-            'tag.id' => 'required',
+            'tags' => 'required|array',
+            'tags.*' => 'required|exists:tags,id',
             'description' => 'nullable|string',
             'status' => 'nullable|boolean'
         ];

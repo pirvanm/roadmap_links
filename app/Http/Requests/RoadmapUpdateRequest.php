@@ -24,7 +24,8 @@ class RoadmapUpdateRequest extends FormRequest
         return [
             'id' => 'required|exists:roadmaps,id',
             'name' => 'required|unique:roadmaps,name,' . $this->request->get('id'),
-            'tag.id' => 'required',
+            'tags' => 'required|array',
+            'tags.*' => 'required|exists:tags,id',
             'description' => 'nullable|string',
             'status' => 'nullable|boolean'
         ];

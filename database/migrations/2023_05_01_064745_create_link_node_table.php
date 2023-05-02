@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('link_id');
             $table->unsignedBigInteger('node_id');
             $table->timestamps();
+
+            $table->foreign('link_id')->references('id')->on('links')->onDelete('cascade');
+            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
         });
     }
 

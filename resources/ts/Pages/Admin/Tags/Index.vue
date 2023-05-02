@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { router } from '@inertiajs/vue3'
+
+import FormDialog from './FormDialog.vue';
 
 import { ITag} from '@/Types/ITag';
 
@@ -11,7 +13,26 @@ const props = defineProps({
         type: [] as PropType<ITag[]>,
         default: [],
     }
-})
+});
+
+
+const showDialog = ref(false);
+const tag = ref<ITag | undefined>({} as ITag);
+
+const editTag = (tagToUpdate: ITag) => {
+    tag.value = tagToUpdate;
+    showDialog.value = true;
+};
+
+const createTag = () => {
+    tag.value = undefined;
+    showDialog.value = true;    
+};
+
+const closeDialog = () => {
+    showDialog.value = false;
+};
+
 
 </script>
 
@@ -26,7 +47,7 @@ const props = defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex justify-end mb-4">
-                    <PrimaryButton @click="router.visit(route('tags.create'))">Create</PrimaryButton>
+                    <PrimaryButton @click="createTag">Create</PrimaryButton>
                 </div>
                 <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                     <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
@@ -73,7 +94,7 @@ const props = defineProps({
                                             />
                                         </svg>
                                         </a>
-                                        <a href="#">
+                                        <a href="#" @click="editTag(tag)">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -98,5 +119,6 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+        <FormDialog :show-dialog="showDialog" :tag="tag" @close-dialog="closeDialog"/>
     </AppLayout>
 </template>

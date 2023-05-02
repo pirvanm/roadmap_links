@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Node;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Roadmap extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -16,9 +17,9 @@ class Roadmap extends Model
         'created_at' => 'date:Y-m-d'
     ];
 
-    public function tag()
+    public function tags()
     {
-        return $this->belongsTo(Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
 
     public function nodes()

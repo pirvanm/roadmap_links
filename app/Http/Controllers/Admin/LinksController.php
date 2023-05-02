@@ -73,4 +73,12 @@ class LinksController extends Controller
 
         return back()->with('success','The link has been updated successfully!');
     }
+
+    public function destroy(Link $link)
+    {
+        $link->update(['status' => 0]);
+        $link->delete();
+
+        return redirect()->to(route('links.index'))->with('success','The link has been deleted successfully.');
+    }
 }

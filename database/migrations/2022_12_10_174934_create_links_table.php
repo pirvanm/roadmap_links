@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('type', ['article', 'video', 'post', 'tool']);
             $table->enum('difficulty', ['easy', 'medium', 'advanced']);
             $table->boolean('status')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

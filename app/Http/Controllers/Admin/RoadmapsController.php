@@ -14,7 +14,7 @@ class RoadmapsController extends Controller
 {
     public function index()
     {
-        $roadmaps = Roadmap::with('tag')->with(['mainNode' => function ($q) {
+        $roadmaps = Roadmap::with('tags')->with(['mainNode' => function ($q) {
             $q->withCount('nodes');
         }])->get();
 
@@ -33,9 +33,10 @@ class RoadmapsController extends Controller
         $roadmap = Roadmap::create([
             'name' => $request->validated('name'),
             'description' => $request->validated('description'),
-            'tag_id' => $request->validated('tag')['id'],
             'status' => $request->validated('status'),
         ]);
+
+        $roadmap->tags()->sync($request->validated('tags'));
 
         $roadmap->mainNode()->create([
             'name' => $request->validated('name'),
@@ -51,7 +52,7 @@ class RoadmapsController extends Controller
     {
         $tags = Tag::active()->get();
 
-        $roadmap->load('tag');
+        $roadmap->load('tags');
 
         return Inertia::render('Admin/Roadmaps/Create')->with([
             'tags' => $tags,
@@ -67,9 +68,19 @@ class RoadmapsController extends Controller
             'name' => $validated['name'],
             'description' => $validated['description'],
             'status' => $validated['status'],
-            'tag_id' => $validated['tag']['id'],
         ]);
+
+        $roadmap->tags()->syncWithoutDetaching($request->validated('tags'));
 
         return redirect()->route('roadmaps.index')->with('success','The roadmap has been updated successfully.');
     }
+
+    public function destroy(Roadmap $roadmap)
+    {
+        $roadmap->update(['status' => 0]);
+        $roadmap->delete();
+
+        return redirect()->route('roadmaps.index')->with('success','The roadmap has been deleted successfully.');
+    }
+    
 }

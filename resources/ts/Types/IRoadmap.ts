@@ -4,9 +4,10 @@ import { ITag } from "./ITag";
 export interface IRoadmap
 {
     id: number | null;
-    tag: ITag,
+    tags: ITag[],
     mainNode: INode,
-    name: string | null;
+    name: string;
+    description: string;
     status: boolean;
     created_at: string;
 }

@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Http\Requests\TagRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TagStoreRequest;
+use App\Http\Requests\TagUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
 
 class TagsController extends Controller
@@ -18,14 +19,16 @@ class TagsController extends Controller
         return Inertia::render('Admin/Tags/Index')->with(['tags' => $tags]);
     }
 
-    public function create()
-    {
-        return Inertia::render('Admin/Tags/Create');
-    }
-
-    public function store(TagRequest $request)
+    public function store(TagStoreRequest $request)
     {
         $tag = Tag::create($request->validated());
+
+        return redirect()->route('tags.index')->with('success','The tag has been saved successfully.');
+    }
+
+    public function update(TagUpdateRequest $request, Tag $tag)
+    {
+        $tag->update($request->validated());
 
         return redirect()->route('tags.index')->with('success','The tag has been saved successfully.');
     }

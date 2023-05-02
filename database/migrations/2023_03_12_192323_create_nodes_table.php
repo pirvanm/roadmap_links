@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->boolean('status')->default(0);
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('nodes')->Delete('cascade');
+            $table->foreign('roadmap_id')->references('id')->on('roadmaps')->onDelete('cascade');
         });
     }
 

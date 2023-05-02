@@ -24,6 +24,11 @@ class Tag extends Model
         return $this->belongsToMany(Link::class, 'link_tag');
     }
 
+    public function roadmaps()
+    {
+        return $this->belongsToMany(Roadmap::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 1);

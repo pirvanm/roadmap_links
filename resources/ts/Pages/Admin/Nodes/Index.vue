@@ -3,18 +3,42 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SVGTreeGraph from '@/Icons/SVGTreeGraph.vue';
 import { router } from '@inertiajs/vue3';
-import { PropType } from 'vue';
+import { PropType, reactive, ref } from 'vue';
 import {Link} from '@inertiajs/vue3';
 
-import IRoadmapNode from '@/Types/IRoadmapNode';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+
+
+import { INode } from '@/ts/Types/INode';
 
 const props = defineProps({
     nodes: {
-        type: [] as PropType<IRoadmapNode[]>,
+        type: [] as PropType<INode[]>,
         default: [],
     },
-    parentNode: {} as PropType<IRoadmapNode>
+    parentNode: {} as PropType<INode>
 })
+
+
+const showConfirmationModal = ref(false);
+let node = reactive<INode | undefined>({} as INode);
+
+const deleteNodeAction = (nodeToDelete: INode) => {
+    showConfirmationModal.value = true;
+    node = nodeToDelete;
+};
+
+const deleteNode = () => {
+    router.delete(route('roadmaps.nodes.destroy', {node: node?.id}), {
+        onSuccess: () => {
+            showConfirmationModal.value = false;
+        },
+        onError: () => {
+
+        },
+    })
+};
+
 
 </script>
 
@@ -22,7 +46,7 @@ const props = defineProps({
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-700 leading-tight">
-                RoadMaps Nodes - {{ parentNode.name }}
+                RoadMaps Nodes - {{ parentNode?.name }}
             </h2>
         </template>
 
@@ -38,6 +62,7 @@ const props = defineProps({
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900">ID</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Name</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Links</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Nodes</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center">Created At</th>
                             <th scope="col" class="px-6 py-4 font-medium text-gray-900 text-center"></th>
                         </tr>
@@ -49,6 +74,7 @@ const props = defineProps({
                                 </th>
                                 <td class="px-6 py-4 text-center">{{ nodeItem.name }}</td>
                                 <td class="px-6 py-4 text-center">{{ nodeItem.links_count }}</td>
+                                <td class="px-6 py-4 text-center">{{ nodeItem.nodes_count }}</td>
                                 <td class="px-6 py-4 text-center">
                                     {{ nodeItem.created_at }}
                                 </td>
@@ -57,7 +83,7 @@ const props = defineProps({
                                     <div class="cursor-pointer" @click="router.visit(route('roadmaps.nodes.index', {node: nodeItem.id}))">
                                         <SVGTreeGraph class="w-6 h-6 text-gray-300 fill-gray-500 hover:fill-sky-500"/>
                                     </div>
-                                    <a href="#">
+                                    <a href="#"  @click="deleteNodeAction(nodeItem)">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -102,5 +128,19 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+        <ConfirmationModal :show="showConfirmationModal">
+            <template #title>
+                Confirm Deletion
+            </template>
+            <template #content>
+                Are you sure you want to delete the node?
+            </template>
+            <template #footer>
+                <div class="flex gap-2">
+                    <PrimaryButton @click="showConfirmationModal = !showConfirmationModal">Cancel</PrimaryButton>
+                    <PrimaryButton @click="deleteNode">Confirm</PrimaryButton>
+                </div>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>

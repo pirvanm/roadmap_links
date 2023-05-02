@@ -5,12 +5,13 @@ namespace App\Models;
 use App\Models\Node;
 use App\Models\Roadmap;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class Node extends Model
 {
-    use HasFactory, HasRecursiveRelationships;
+    use HasFactory, HasRecursiveRelationships, SoftDeletes;
 
     protected $guarded = ['id'];
 

@@ -38,24 +38,29 @@ Route::middleware([
         Route::post('/', [AdminRoadmapsController::class, 'store'])->name('roadmaps.store');
         Route::get('/{roadmap}/edit', [AdminRoadmapsController::class, 'edit'])->name('roadmaps.edit');
         Route::patch('/{roadmap}', [AdminRoadmapsController::class, 'update'])->name('roadmaps.update');
+        Route::delete('/{roadmap}', [AdminRoadmapsController::class, 'destroy'])->name('roadmaps.destroy');
 
-        Route::get('/nodes/{node}', [NodesController::class, 'index'])->name('roadmaps.nodes.index');
-        Route::get('/nodes/{node}/create', [NodesController::class, 'create'])->name('roadmaps.nodes.create');
-        Route::post('/nodes', [NodesController::class, 'store'])->name('roadmaps.nodes.store');
-        Route::get('/nodes/{node}/{childNode}/edit', [NodesController::class, 'edit'])->name('roadmaps.nodes.edit');
-        Route::patch('/nodes/{node}', [NodesController::class, 'update'])->name('roadmaps.nodes.update');
-        Route::post('/nodes/{node}/link', [NodesController::class, 'storeLink'])->name('roadmaps.nodes.store-link');
-
+        Route::prefix('/nodes')->group(function () {
+            Route::get('/{node}', [NodesController::class, 'index'])->name('roadmaps.nodes.index');
+            Route::get('/{node}/create', [NodesController::class, 'create'])->name('roadmaps.nodes.create');
+            Route::post('/', [NodesController::class, 'store'])->name('roadmaps.nodes.store');
+            Route::get('/{node}/{childNode}/edit', [NodesController::class, 'edit'])->name('roadmaps.nodes.edit');
+            Route::patch('/{node}', [NodesController::class, 'update'])->name('roadmaps.nodes.update');
+            Route::post('/{node}/link', [NodesController::class, 'storeLink'])->name('roadmaps.nodes.store-link');
+            Route::delete('/{node}/link/{link}', [NodesController::class, 'deleteLink'])->name('roadmaps.nodes.delete-link');
+            Route::delete('/{node}', [NodesController::class, 'destroy'])->name('roadmaps.nodes.destroy');
+        });
     });
 
     Route::get('/links', [LinksController::class, 'index'])->name('links.index');
     Route::post('/links', [LinksController::class, 'store'])->name('links.store');
     Route::patch('/links/{link}', [LinksController::class, 'update'])->name('links.update');
+    Route::delete('/links/{link}', [LinksController::class, 'destroy'])->name('links.destroy');
 
 
     Route::get('/tags', [TagsController::class, 'index'])->name('tags.index');
-    Route::get('/tags/create', [TagsController::class, 'create'])->name('tags.create');
     Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
+    Route::patch('/tags/{tag}', [TagsController::class, 'update'])->name('tags.update');
 
 });
 

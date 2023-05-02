@@ -34,8 +34,9 @@ class DatabaseSeeder extends Seeder
              'name' => 'PHP101',
              'description' => 'Learning about PHP from the very basic to the very advanced.',
              'status' => 1,
-             'tag_id' => $tag->id,
          ]);
+
+         $roadmap->tags()->attach([$tag->id]);
 
          // main node, as the self
         $roadmap->mainNode()->create([

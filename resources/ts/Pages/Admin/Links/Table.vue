@@ -4,7 +4,7 @@ import {Link} from '@inertiajs/vue3';
 
 import ILink from '@/ts/Types/ILink';
 
-const emit = defineEmits(['onLinkEdit']);
+const emit = defineEmits(['onLinkEdit', 'onDeleteLinkAction']);
 
 const props = defineProps({
     links: {
@@ -15,6 +15,10 @@ const props = defineProps({
 
 const editLink = (link: ILink) => {
     emit('onLinkEdit', link);
+};
+
+const deleteLinkAction = (link: ILink) => {
+    emit('onDeleteLinkAction', link);
 };
 
 </script>
@@ -57,7 +61,7 @@ const editLink = (link: ILink) => {
                 </td>
                 <td class="px-6 py-4">
                     <div class="flex justify-end gap-4">
-                        <a href="#">
+                        <a href="#" @click="deleteLinkAction(link)">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

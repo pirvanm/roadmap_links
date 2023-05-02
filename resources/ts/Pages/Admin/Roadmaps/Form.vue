@@ -2,6 +2,8 @@
 import { PropType } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
 
+import Multiselect from '@vueform/multiselect'
+
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 import InputLabel from '@/Components/InputLabel.vue';
@@ -13,6 +15,10 @@ import Select from '@/Components/Select.vue';
 import { IRoadmap } from '@/ts/Types/IRoadmap';
 import { ITag } from '@/ts/Types/ITag';
 
+interface IOption {
+    value: number;
+    label: string;
+};
 
 const props = defineProps({
     roadmap: {
@@ -25,11 +31,20 @@ const props = defineProps({
     }
 });
 
+const tags : IOption[] = props.tags.map((tag: ITag) => {
+    return {
+            value: tag.id,
+            label: tag.tag,
+        };
+});
+
 const form= useForm({
     id: props?.roadmap?.id,
     name: props?.roadmap?.name,
     description: props?.roadmap?.description,
-    tag: props?.roadmap?.tag,
+    tags: props?.roadmap?.tags?.length ? props.roadmap.tags.map((tag: ITag) => {
+        return tag.id;
+    }) : [] as IOption | Number[],
     status: props?.roadmap?.status ?? false,
 })
 
@@ -63,13 +78,16 @@ const updateTag = (tag: ITag) => {
                 <TextInput v-model="form.name"/>
                 <InputError :message="form.errors.name"/>
             </div>
-            <div class="flex flex-col">
-                <Select v-model:selected="form.tag" label="Tag">
-                    <option :value="null">Select a tag</option>
-                    <option :value="tag" v-for="(tag, tagIndex) in tags" :key="'tag-'+String(tagIndex)" @update:selected="updateTag">
-                        {{ tag.tag }}
-                    </option>
-                </Select>
+            <div class="flex flex-col gap-2">
+                <InputLabel value="Tags"/>
+                <Multiselect
+                    v-model="form.tags"
+                    mode="tags"
+                    :close-on-select="false"
+                    :searchable="true"
+                    :options="tags"
+                />
+                <InputError :message="form.errors.tags"/>
             </div>
             <div class="flex flex-col gap-2">
                 <InputLabel value="Description"/>
@@ -84,3 +102,6 @@ const updateTag = (tag: ITag) => {
         <PrimaryButton type="submit">Save</PrimaryButton>
     </form>
 </template>
+
+
+<style src="@vueform/multiselect/themes/default.css"></style>

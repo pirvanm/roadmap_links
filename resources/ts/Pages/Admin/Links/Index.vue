@@ -7,8 +7,10 @@ import FormDialog from './FormDialog.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
+
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+
 import ILink from '@/ts/Types/ILink';
-import Link from '@/shared/interfaces/link';
 import { ITag } from '@/ts/Types/ITag';
 
 const props = defineProps({
@@ -23,20 +25,38 @@ const props = defineProps({
 });
 
 const showDialog = ref(false);
-const link = ref<ILink | undefined>({} as ILink);
+let link = reactive<ILink>({} as ILink);
 
 const onLinkEdit = (linkToUpdate: ILink) => {
-    link.value = linkToUpdate;
+    link = linkToUpdate;
     showDialog.value = true;
 };
 
 const createLink = () => {
-    link.value = undefined;
+    link = {} as ILink;
     showDialog.value = true;    
 };
 
 const closeDialog = () => {
     showDialog.value = false;
+};
+
+const showConfirmationModal = ref(false);
+
+const deleteLinkAction = (linkToDelete: ILink) => {
+    showConfirmationModal.value = true;
+    link = linkToDelete;
+};
+
+const deleteLink = () => {
+    router.delete(route('links.destroy', {link: link?.id}), {
+        onSuccess: () => {
+            showConfirmationModal.value = false;
+        },
+        onError: () => {
+
+        },
+    })
 };
 
 </script>
@@ -55,10 +75,30 @@ const closeDialog = () => {
                     <PrimaryButton @click="createLink">Create</PrimaryButton>
                 </div>
                 <div class="bg-white overflow-hidden shadow sm:rounded-lg">
-                    <Table :links="links" @on-link-edit="onLinkEdit"/>
+                    <Table :links="links" @on-link-edit="onLinkEdit" @on-delete-link-action="deleteLinkAction"/>
                 </div>
             </div>
         </div>
-        <FormDialog :show-dialog="showDialog" :link="link" :tags="tags" @close-dialog="closeDialog"/>
+        <FormDialog 
+            :show-dialog="showDialog" 
+            :link="link" 
+            :tags="tags" 
+            @close-dialog="closeDialog"
+
+            />
+        <ConfirmationModal :show="showConfirmationModal">
+            <template #title>
+                Confirm Deletion
+            </template>
+            <template #content>
+                Are you sure you want to delete the link?
+            </template>
+            <template #footer>
+                <div class="flex gap-2">
+                    <PrimaryButton @click="showConfirmationModal = !showConfirmationModal">Cancel</PrimaryButton>
+                    <PrimaryButton @click="deleteLink">Confirm</PrimaryButton>
+                </div>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>

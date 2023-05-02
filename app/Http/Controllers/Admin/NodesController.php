@@ -16,7 +16,10 @@ class NodesController extends Controller
 {
     public function index(Node $node)
     {
-        $nodes = $node->nodes()->withCount('links')->get();
+        $nodes = $node->nodes()
+                    ->withCount('nodes')
+                    ->withCount('links')
+                    ->get();
         
         return Inertia::render('Admin/Nodes/Index')->with(['nodes' => $nodes, 'parentNode' => $node]);
     }
@@ -78,6 +81,13 @@ class NodesController extends Controller
 
     }
 
+    public function deleteLink(Node $node, Link $link)
+    {
+        $node->links()->detach([$link->id]);
+
+        return redirect()->to(route('roadmaps.nodes.edit', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success','The link has been deleted removed.');
+    }
+
     public function update(NodeUpdateRequest $request, Node $node)
     {
         $node->load('parent');
@@ -89,5 +99,13 @@ class NodesController extends Controller
         ]);
 
         return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success','The roadmap has been saved successfully.');
+    }
+
+    public function destroy(Node $node)
+    {
+        $node->update(['status' => 0]);
+        $node->delete();
+
+        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id]))->with('success','The node has been deleted successfully.');
     }
 }

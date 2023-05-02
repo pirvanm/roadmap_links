@@ -1,19 +1,43 @@
 <script lang="ts" setup>
+import { router } from '@inertiajs/vue3';
+import { PropType, reactive, ref } from 'vue';
+import {Link} from '@inertiajs/vue3';
+
+
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SVGTreeGraph from '@/Icons/SVGTreeGraph.vue';
-import { router } from '@inertiajs/vue3';
-import { PropType } from 'vue';
-import {Link} from '@inertiajs/vue3';
+
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 
 import IRoadmap from '@/Types/IRoadmap';
+import { ITag } from '@/ts/Types/ITag';
 
 const props = defineProps({
     roadmaps: {
         type: [] as PropType<IRoadmap[]>,
         default: [],
     }
-})
+});
+
+const showConfirmationModal = ref(false);
+let roadmap = reactive<IRoadmap | undefined>({} as IRoadmap);
+
+const deleteRoadmapAction = (roadmapToDelete: IRoadmap) => {
+    showConfirmationModal.value = true;
+    roadmap = roadmapToDelete;
+};
+
+const deleteRoadmap = () => {
+    router.delete(route('roadmaps.destroy', {roadmap: roadmap?.id}), {
+        onSuccess: () => {
+            showConfirmationModal.value = false;
+        },
+        onError: () => {
+
+        },
+    })
+};
 
 </script>
 
@@ -50,7 +74,7 @@ const props = defineProps({
                                 </th>
                                 <td class="px-6 py-4 text-center">{{ roadmap.name }}</td>
                                 <td class="px-6 py-4 text-center">{{ roadmap.main_node.nodes_count }}</td>
-                                <td class="px-6 py-4 text-center">{{ roadmap.tag.tag }}</td>
+                                <td class="px-6 py-4 text-center">{{ roadmap.tags.map((tag : ITag) => tag.tag).toString(',') }}</td>
                                 <td class="px-6 py-4 flex justify-center">
                                     <span v-if="roadmap.status" class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
                                         <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span>
@@ -65,7 +89,7 @@ const props = defineProps({
                                     <Link :href="route('roadmaps.nodes.index', {node: roadmap.main_node.id})">
                                         <SVGTreeGraph class="w-6 h-6 text-gray-300 fill-gray-500 hover:fill-sky-500"/>
                                     </Link>
-                                    <a href="#">
+                                    <a href="#" @click="deleteRoadmapAction(roadmap)">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -107,5 +131,19 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+        <ConfirmationModal :show="showConfirmationModal">
+            <template #title>
+                Confirm Deletion
+            </template>
+            <template #content>
+                Are you sure you want to delete the roadmap?
+            </template>
+            <template #footer>
+                <div class="flex gap-2">
+                    <PrimaryButton @click="showConfirmationModal = !showConfirmationModal">Cancel</PrimaryButton>
+                    <PrimaryButton @click="deleteRoadmap">Confirm</PrimaryButton>
+                </div>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>
