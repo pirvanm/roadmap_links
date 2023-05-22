@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import DialogModal from '@/Components/DialogModal.vue';
     import { router, useForm } from '@inertiajs/vue3';
-    import { PropType, onMounted, reactive, watch } from 'vue';
+    import {PropType, onMounted, reactive, watch, watchEffect} from 'vue';
 
     import Multiselect from '@vueform/multiselect'
 
@@ -51,11 +51,11 @@
 
 
     const submit = () => {
-        let url = props.link ? route('links.update', {link: props.link.id})
+        let url = props.link?.id ? route('links.update', {link: props.link.id})
                                 :  route('links.store');
-        let method = props.link ? 'patch' : 'post';
+        let method = props.link?.id ? 'patch' : 'post';
 
-        if (props.roadMapRoute && !props.link) {
+        if (props.roadMapRoute && !props.link.id) {
             url = props.roadMapRoute;
         }
 
@@ -63,6 +63,9 @@
             onSuccess: () => {
                 form.reset();
                 closeDialog();
+            },
+            onError: () => {
+                console.log(form.errors);
             },
         });
     };
@@ -80,7 +83,7 @@
     };
 
     const setForm = () => {
-        return useForm({
+        return {
             id: props.link?.id,
             title: props.link?.title,
             link: props.link?.link,
@@ -90,26 +93,26 @@
             status: props.link?.status ?? false,
             tags: props.link?.tags?.length ? props.link?.tags.map((tag: ITag) => {
                 return tag.id;
-            }) : [] as IOption[] | Number[],
-        });
+            }) : [],
+        } as ILink;
     };
 
     const closeDialog = () => {
         emit('closeDialog');
     };
 
-    watch (props, () => {
-        form = setForm();
-    });
 
-    let form = setForm();
-    
+    let form = useForm(setForm());
+
+    watch(() => props.showDialog, () => {
+        form = useForm(setForm());
+    });
 </script>
 
 <template>
     <DialogModal :show="showDialog" @close="closeDialog">
         <template #title>
-            <span v-if="!link">Create New Link</span>
+            <span v-if="!link.id">Create New Link</span>
             <span v-else>Edit Link</span>
         </template>
         <template #content>

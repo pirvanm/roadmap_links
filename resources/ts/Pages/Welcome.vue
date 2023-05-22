@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import "@ssthouse/vue3-tree-chart/dist/vue3-tree-chart.css";
 import { Head, Link } from '@inertiajs/vue3';
 import { router } from "@inertiajs/vue3";
 
@@ -38,7 +37,7 @@ const props = defineProps({
                 <div class="shadow bg-white border-slate-100 rounded px-3 py-4" v-for="(roadmap, index) in roadmaps" :key="`roadmap-${index}`">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-3xl text-slate-800">{{  roadmap.name }}</h2>
-                        <span class="text-slate-500">{{ roadmap.tag.tag }}</span>
+                        <span class="text-slate-500">{{ roadmap.tags.map((tag) => tag.tag).toString(',') }}</span>
                     </div>
                     <div class="min-h-[40px] max-h-[40px] mb-4">
                         <p class="text-sm text-slate-600">{{ roadmap.description }}</p>

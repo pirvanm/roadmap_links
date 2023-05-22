@@ -15,7 +15,7 @@ class Node extends Model
 
     protected $guarded = ['id'];
 
-    protected $with = ['nodes'];
+    protected $with = ['nodes.links'];
 
     protected $casts = [
         'created_at' => 'date:Y-m-d'

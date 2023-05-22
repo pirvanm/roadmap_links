@@ -20,7 +20,7 @@ export default defineConfig(({command}: ConfigEnv) => {
                 {find: '~/assets', replacement: path.resolve(__dirname, 'resources/assets')},
             ],
         },
-        base: command === 'build' ? '/dist/' : '',
+        base: command === 'build' ? '/build/' : '',
         build: {
             manifest: true,
             outDir: "public/build",

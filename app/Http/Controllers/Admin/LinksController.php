@@ -29,7 +29,7 @@ class LinksController extends Controller
             'tags' => $tags,
         ]);
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -77,7 +77,7 @@ class LinksController extends Controller
     public function destroy(Link $link)
     {
         $link->update(['status' => 0]);
-        $link->delete();
+        $link->forceDelete();
 
         return redirect()->to(route('links.index'))->with('success','The link has been deleted successfully.');
     }

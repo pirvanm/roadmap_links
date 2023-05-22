@@ -29,10 +29,10 @@ const props = defineProps({
 });
 
 const showDialog = ref(false);
-let link = reactive<ILink>({} as ILink);
+let link = reactive<ILink | null>(null);
 
 const createLink = () => {
-    link = {} as ILink;;
+    link = {} as ILink;
     showDialog.value = true;
 };
 
@@ -42,7 +42,7 @@ const onLinkEdit = (linkToUpdate: ILink) => {
 };
 
 const closeDialog = () => {
-    link =  {} as ILink;
+    link =  null;
     showDialog.value = false;
 };
 
@@ -94,13 +94,14 @@ const deleteLink = () => {
                 </div>
             </div>
         </div>
-        
-        <FormDialog 
-            :show-dialog="showDialog" 
-            :road-map-route="route('roadmaps.nodes.store-link', {node: childNode.id})" 
-            :link="link" 
-            :tags="tags" 
+
+        <FormDialog
+            :show-dialog="showDialog"
+            :roadMapRoute="route('roadmaps.nodes.store-link', {node: childNode.id})"
+            :link="link"
+            :tags="tags"
             @close-dialog="closeDialog"
+
         />
 
         <ConfirmationModal :show="showLinkConfirmationModal">

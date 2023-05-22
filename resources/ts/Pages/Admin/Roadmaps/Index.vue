@@ -80,6 +80,10 @@ const deleteRoadmap = () => {
                                         <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span>
                                         Active
                                     </span>
+                                    <span v-else class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs font-semibold text-red-600">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-red-600"></span>
+                                        Active
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     {{ roadmap.created_at }}

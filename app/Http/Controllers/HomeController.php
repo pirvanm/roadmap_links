@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $roadmaps = Roadmap::active()->with('tag')->get();
+        $roadmaps = Roadmap::active()->with('tags')->get();
 
         return inertia('Welcome')->with(['roadmaps' => $roadmaps]);
     }
