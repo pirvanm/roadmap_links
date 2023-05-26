@@ -18,13 +18,31 @@ class LinksController extends Controller
      * @param \Illuminate\Http\Request  $request
      * @return \Inertia\Response|\Inertia\ResponseFactory
      */
-    public function index(Request $request) : \Inertia\Response|\Inertia\ResponseFactory
+    public function index(Request $request): \Inertia\Response|\Inertia\ResponseFactory
     {
         $links = Link::with('tags')->get();
         $tags = Tag::get();
 
 
         return inertia('Admin/Links/Index', [
+            'links' => $links,
+            'tags' => $tags,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Inertia\Response|\Inertia\ResponseFactory
+     */
+    public function listing(Request $request): \Inertia\Response|\Inertia\ResponseFactory
+    {
+        $links = Link::with('tags')->get();
+        $tags = Tag::get();
+
+
+        return inertia('Links/Index', [
             'links' => $links,
             'tags' => $tags,
         ]);
@@ -37,7 +55,7 @@ class LinksController extends Controller
      * @param  \App\Http\Requests\LinkRequest   $linkRequest
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LinkRequest $linkRequest) :  \Illuminate\Http\RedirectResponse
+    public function store(LinkRequest $linkRequest): \Illuminate\Http\RedirectResponse
     {
         $validated = $linkRequest->validated();
 
@@ -52,11 +70,10 @@ class LinksController extends Controller
 
         $link->tags()->sync($validated['tags']);
 
-        return back()->with('success','The link has been saved successfully!');
-
+        return back()->with('success', 'The link has been saved successfully!');
     }
 
-    public function update(LinkUpdateRequest $linkRequest, Link $link) :  \Illuminate\Http\RedirectResponse
+    public function update(LinkUpdateRequest $linkRequest, Link $link): \Illuminate\Http\RedirectResponse
     {
         $validated = $linkRequest->validated();
 
@@ -71,7 +88,7 @@ class LinksController extends Controller
 
         $link->tags()->syncWithoutDetaching($validated['tags']);
 
-        return back()->with('success','The link has been updated successfully!');
+        return back()->with('success', 'The link has been updated successfully!');
     }
 
     public function destroy(Link $link)
@@ -79,6 +96,6 @@ class LinksController extends Controller
         $link->update(['status' => 0]);
         $link->forceDelete();
 
-        return redirect()->to(route('links.index'))->with('success','The link has been deleted successfully.');
+        return redirect()->to(route('links.index'))->with('success', 'The link has been deleted successfully.');
     }
 }

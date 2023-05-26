@@ -8,7 +8,8 @@ use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\LinksController;
 use App\Http\Controllers\Admin\NodesController;
 use App\Http\Controllers\Admin\RoadmapsController as AdminRoadmapsController;
-
+use App\Http\Controllers\ScraperController;
+use App\Http\Controllers\PlacesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,13 @@ use App\Http\Controllers\Admin\RoadmapsController as AdminRoadmapsController;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
 
+Route::get('/scrape-real-estate-agencies', [ScrapingController::class, 'scrapeRealEstateAgencies']);
+
+Route::get('/romanian-real-estate-agencies', [PlacesController::class, 'getRealEstateAgencies']);
+
+Route::get('/s', [\App\Http\Controllers\realcontroller::class, 'getRealEstateAgencies']);
+
+Route::get('/links', [LinksController::class, 'listing'])->name('links.listing');
 
 Route::middleware([
     'auth:sanctum',
@@ -61,7 +69,6 @@ Route::middleware([
     Route::get('/tags', [TagsController::class, 'index'])->name('tags.index');
     Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
     Route::patch('/tags/{tag}', [TagsController::class, 'update'])->name('tags.update');
-
 });
 
 Route::get('/roadmaps/{roadmap}', [RoadmapController::class, 'show'])->name('roadmaps.show');

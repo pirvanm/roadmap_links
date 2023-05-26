@@ -23,6 +23,7 @@
         "@ssthouse/vue3-tree-chart": "^0.2.6",
         "@vuedx/typescript-plugin-vue": "^0.7.6",
         "@vueform/multiselect": "^2.6.2",
+        "puppeteer": "^20.4.0",
         "typescript": "^5.0.2",
         "vite-tsconfig-paths": "^4.0.7",
         "vue-toastification": "^2.0.0-rc.5",

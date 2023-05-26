@@ -21,27 +21,51 @@ const data = {
     children: [],
 };
 
-function loadRoadMap(parentNode, data) {
-    parentNode.nodes.forEach((node, nodeIndex) => {
-        const child = {
-            id: node.id,
-            name: node.name,
-            links: node.links,
-            description: node.description,
-            hasChildren: node?.nodes?.length,
-            children: [],
-        };
-        data.children.push(child);
+// function loadRoadMap(parentNode, data) {
+//     parentNode.nodes.forEach((node, nodeIndex) => {
+//         const child = {
+//             id: node.id,
+//             name: node.name,
+//             links: node.links,
+//             description: node.description,
+//             hasChildren: node?.nodes?.length,
+//             children: [],
+//         };
+//         data.children.push(child);
 
-        if (node?.nodes?.length) {
-            loadRoadMap(node, child);
+//         if (node?.nodes?.length) {
+//             loadRoadMap(node, child);
+//         }
+//     });
+// }
+//
+
+const names = ["Functions", "Variables"];
+function loadRoadMap(parentNode, data, names) {
+    parentNode.nodes.forEach((node, nodeIndex) => {
+        if (names.includes(node.name)) {
+            const child = {
+                id: node.id,
+                name: node.name,
+                links: node.links,
+                description: node.description,
+                hasChildren: node?.nodes?.length,
+                children: [],
+            };
+            data.children.push(child);
+
+            if (node?.nodes?.length) {
+                loadRoadMap(node, child, names);
+            }
         }
     });
 }
 
+// 
+
 const treeConfig = { nodeWidth: 230, nodeHeight: 40, levelHeight: 200 };
 
-loadRoadMap(props.roadMap.main_node, data);
+loadRoadMap(props.roadMap.main_node, data, names);
 
 const showNodeInfo = ref<boolean>(false);
 const nodeInfoLoading = ref(false);
@@ -158,4 +182,5 @@ const nodeClicked = (node) => {
     color: #333;
     background-color: #ffcd4e;
     border-radius: 4px;
-}</style>
+}
+</style>

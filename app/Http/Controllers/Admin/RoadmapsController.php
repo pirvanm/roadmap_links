@@ -43,11 +43,10 @@ class RoadmapsController extends Controller
             'status' => 1,
         ]);
 
-        return redirect()->route('roadmaps.index')->with('success','The roadmap has been saved successfully.');
-
+        return redirect()->route('roadmaps.index')->with('success', 'The roadmap has been saved successfully.');
     }
 
-    
+
     public function edit(Roadmap $roadmap)
     {
         $tags = Tag::active()->get();
@@ -70,9 +69,9 @@ class RoadmapsController extends Controller
             'status' => $validated['status'],
         ]);
 
-        $roadmap->tags()->syncWithoutDetaching($request->validated('tags'));
+        $roadmap->tags()->sync($request->validated('tags'));
 
-        return redirect()->route('roadmaps.index')->with('success','The roadmap has been updated successfully.');
+        return redirect()->route('roadmaps.index')->with('success', 'The roadmap has been updated successfully.');
     }
 
     public function destroy(Roadmap $roadmap)
@@ -80,7 +79,6 @@ class RoadmapsController extends Controller
         $roadmap->update(['status' => 0]);
         $roadmap->delete();
 
-        return redirect()->route('roadmaps.index')->with('success','The roadmap has been deleted successfully.');
+        return redirect()->route('roadmaps.index')->with('success', 'The roadmap has been deleted successfully.');
     }
-    
 }

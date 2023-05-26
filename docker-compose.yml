@@ -3,6 +3,7 @@ version: '3'
 networks:
   roadmap_links:
 
+
 volumes:
   mysql:
     driver: local
@@ -17,7 +18,7 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
-        - USER=${USER:-laravel}
+        - USER=roadmap_links
     restart: unless-stopped
     container_name: roadmap_links-nginx
     depends_on:
@@ -37,7 +38,7 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
-        - USER=${USER:-laravel}
+        - USER=roadmap_links
     container_name: roadmap_links-php
     ports:
       - ':9000'
@@ -64,7 +65,7 @@ services:
     networks:
       - roadmap_links
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-p${DB_PASSWORD}']
+      test: [ 'CMD', 'mysqladmin', 'ping', '-p${DB_PASSWORD}' ]
       retries: 3
       timeout: 5s
 
@@ -103,16 +104,16 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
-        - USER=${USER:-laravel}
+        - USER=roadmap_links
     container_name: roadmap_links-composer
     volumes:
       - ./:/var/www/html
     working_dir: /var/www/html
     depends_on:
       - php
-    user: ${USER:-laravel} #system user
-    profiles: ['composer']
-    entrypoint: ['composer', '--ignore-platform-reqs']
+    user: roadmap_links #system user
+    profiles: [ 'composer' ]
+    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
     networks:
       - roadmap_links
 
@@ -123,7 +124,7 @@ services:
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
-        - USER=${USER:-laravel}
+        - USER=roadmap_links
     container_name: roadmap_links-artisan
     volumes:
       - ./:/var/www/html
@@ -131,8 +132,8 @@ services:
       - php
       - mysql
     working_dir: /var/www/html
-    profiles: ['artisan']
-    entrypoint: ['php', '/var/www/html/artisan']
+    profiles: [ 'artisan' ]
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
     networks:
       - roadmap_links
 
@@ -146,7 +147,7 @@ services:
       - 3001:3001
       - 5173:5173
     working_dir: /var/www/html
-    profiles: ['npm']
-    entrypoint: ['npm']
+    profiles: [ 'npm' ]
+    entrypoint: [ 'npm' ]
     networks:
       - roadmap_links

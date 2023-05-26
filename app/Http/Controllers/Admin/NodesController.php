@@ -17,10 +17,12 @@ class NodesController extends Controller
     public function index(Node $node)
     {
         $nodes = $node->nodes()
-                    ->withCount('nodes')
-                    ->withCount('links')
-                    ->get();
-        
+            ->withCount('nodes')
+            ->withCount('links')
+            ->get();
+
+
+
         return Inertia::render('Admin/Nodes/Index')->with(['nodes' => $nodes, 'parentNode' => $node]);
     }
 
@@ -51,7 +53,7 @@ class NodesController extends Controller
             'status' => $request->validated('status') ?? 0,
         ]);
 
-        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->id]))->with('success','The roadmap has been saved successfully.');
+        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->id]))->with('success', 'The roadmap has been saved successfully.');
     }
 
     /**
@@ -60,7 +62,7 @@ class NodesController extends Controller
      * @param  \App\Http\Requests\LinkRequest   $linkRequest
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeLink(LinkRequest $linkRequest, Node $node) :  \Illuminate\Http\RedirectResponse
+    public function storeLink(LinkRequest $linkRequest, Node $node): \Illuminate\Http\RedirectResponse
     {
         $validated = $linkRequest->validated();
 
@@ -77,15 +79,14 @@ class NodesController extends Controller
 
         $link->nodes()->sync([$node->id]);
 
-        return back()->with('success','The link has been saved successfully!');
-
+        return back()->with('success', 'The link has been saved successfully!');
     }
 
     public function deleteLink(Node $node, Link $link)
     {
         $node->links()->detach([$link->id]);
 
-        return redirect()->to(route('roadmaps.nodes.edit', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success','The link has been deleted removed.');
+        return redirect()->to(route('roadmaps.nodes.edit', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success', 'The link has been deleted removed.');
     }
 
     public function update(NodeUpdateRequest $request, Node $node)
@@ -98,7 +99,7 @@ class NodesController extends Controller
             'status' => $request->validated('status') ?? 0,
         ]);
 
-        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success','The roadmap has been saved successfully.');
+        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id, 'childNode' => $node->id]))->with('success', 'The roadmap has been saved successfully.');
     }
 
     public function destroy(Node $node)
@@ -106,6 +107,6 @@ class NodesController extends Controller
         $node->update(['status' => 0]);
         $node->delete();
 
-        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id]))->with('success','The node has been deleted successfully.');
+        return redirect()->to(route('roadmaps.nodes.index', ['node' => $node->parent->id]))->with('success', 'The node has been deleted successfully.');
     }
 }
